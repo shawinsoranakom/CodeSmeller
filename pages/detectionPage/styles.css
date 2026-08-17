@@ -1,0 +1,37 @@
+/* body {
+    background-color: #25254e;
+} */
+
+h1 {
+    text-align: center;
+    /* color: aliceblue; */
+    padding-top: 5px;
+}
+
+#BtnWrap {
+    padding-top: 5px;
+    text-align: center;
+}
+
+#detectBtn {
+    --bs-btn-color: white;
+    --bs-btn-bg: blue;
+    --bs-btn-hover-bg: cyan;
+}
+
+#clearCodeBtn {
+    --bs-btn-color: white;
+    --bs-btn-bg: #FF0000;
+    --bs-btn-hover-bg: #ff8585;
+    --bs-btn-border-color: #FF0000;
+    --bs-btn-hover-border-color: #FF0000;
+}
+
+.CodeMirror {
+    width: 100%;
+    max-width: 650px;
+    height: 400px;
+    border: 2px;
+    border-color: black;
+    font-size: 14px;
+}
