@@ -1,11 +1,15 @@
-/* body {
+body {
     background-color: #25254e;
-} */
+}
 
 h1 {
     text-align: center;
-    /* color: aliceblue; */
+    color: rgb(57, 163, 255);
     padding-top: 5px;
+}
+
+#DetectContainer {
+    padding-top: 1%;
 }
 
 #BtnWrap {
@@ -34,4 +38,44 @@ h1 {
     border: 2px;
     border-color: black;
     font-size: 14px;
+}
+
+#detText {
+    color: rgb(113, 189, 255);
+    background-color: #3b5eb6;
+    border-radius: 5px;
+}
+
+#detectResult {
+    background-color: #3b5eb6;
+    --accordion-bg: #4f81ff;
+}
+
+#complexMethod {
+    color: #FF0000;
+    font-weight: bold;
+}
+
+.accordion-button {
+    padding: 0.5rem 0.85rem; /* Default is 1rem 1.25rem */
+    font-size: 0.875rem;     /* Slightly smaller font to match compact size */
+    min-height: auto;
+}
+
+/* 2. Scale down the arrow icon & balance its vertical placement */
+    .accordion-button::after {
+    background-size: 0.85rem;
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+/* 3. Reduce internal padding inside the Expanded Content Body */
+.accordion-body {
+    padding: 0.6rem 0.85rem; /* Default is 1rem 1.25rem */
+    font-size: 0.85rem;
+}
+
+/* 4. Remove default paragraph margins inside the body to prevent height inflation */
+    .accordion-body p {
+    margin-bottom: 0;
 }

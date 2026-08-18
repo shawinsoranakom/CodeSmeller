@@ -15,7 +15,7 @@
 <body>
     <h1>Code Smeller (Powered by CodeBERT)</h1> 
 
-    <div class="container">
+    <div class="container" id="DetectContainer">
         <div class="row">
             <div class="col">
                 <div class="input-group mb-3">
@@ -27,7 +27,7 @@
                         rows="10" 
                         cols="50" 
                         placeholder="Paste python code here!"
-                        
+
                         style="font-family: monospace; background-color: #f4f4f4; padding:20px;"></textarea>
                     
                 <div id="BtnWrap">
@@ -36,7 +36,19 @@
                 </div>
             </div>
             <div class="col">
-                <p>Detection Result</p>
+                <h3 id="detText">Detection Result</h3>
+                <div class="accordion" id="detectResult">
+                    <template id="resTemplate">
+                        <button id="methodDropdown" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#result" aria-expanded="true" aria-controls="result">
+                            def method():
+                        </button>
+                        <div id="result" class="accordion-collapse collapse hide" data-bs-target="#detectResult">
+                            <div class="accordion-body">
+                                <p id="complexMethod">Complex Method : %</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
         </div>
     </div>

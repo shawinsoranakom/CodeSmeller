@@ -51,40 +51,61 @@ async function loadModelAndTokenizer() {
     }
 }
 
-ipcMain.handle('DetectCodeSmell', async (event, pyCode) => {
+function logitsToProbabilities(logits) {
+    const maxLogit = Math.max(...logits);
+    const exps = logits.map(x => Math.exp(x - maxLogit));
+    const sumExps = exps.reduce((a, b) => a + b, 0);
+    return exps.map(exp => exp / sumExps);
+}
+
+ipcMain.handle('DetectCodeSmell', async (event, methodList) => {
     if (!session || !tokenizer) {
         throw new Error('Model or Tokenizer not loaded yet.');
     }
 
-    // Ensure input is a valid string
-    const textInput = String(pyCode || '').trim();
-    if (!textInput) return [];
+    detectResList = [];
 
-    // 1. Tokenize with padding enabled
-    const encoded = await tokenizer(textInput, {
-        padding: true,
-        truncation: true,
-        max_length: 512,
-    });
+    for(const method of methodList) {
+        // Ensure input is a valid string
 
-    // 2. Extract input tensors
-    const inputIds = BigInt64Array.from(encoded.input_ids.data);
-    const attentionMask = BigInt64Array.from(encoded.attention_mask.data);
-    const seqLength = encoded.input_ids.dims[1];
+        const textInput = String(method["body"] || '').trim();
+        if (!textInput) return [];
 
-    // 3. Create ONNX Tensors
-    const feeds = {
-        input_ids: new ort.Tensor('int64', inputIds, [1, seqLength]),
-        attention_mask: new ort.Tensor('int64', attentionMask, [1, seqLength]),
-    };
+        // 1. Tokenize with padding enabled
+        const encoded = await tokenizer(textInput, {
+            padding: true,
+            truncation: true,
+            max_length: 512,
+        });
 
-    // 4. Run model inference
-    const results = await session.run(feeds);
+        // 2. Extract input tensors
+        const inputIds = BigInt64Array.from(encoded.input_ids.data);
+        const attentionMask = BigInt64Array.from(encoded.attention_mask.data);
+        const seqLength = encoded.input_ids.dims[1];
 
-    // 5. Return outputs
-    const outputName = Object.keys(results)[0];
+        // 3. Create ONNX Tensors
+        const feeds = {
+            input_ids: new ort.Tensor('int64', inputIds, [1, seqLength]),
+            attention_mask: new ort.Tensor('int64', attentionMask, [1, seqLength]),
+        };
 
-    console.log(Array.from(results[outputName].data));
+        // 4. Run model inference
+        const results = await session.run(feeds);
+
+        // 5. Return outputs
+        const outputName = Object.keys(results)[0];
+
+        let detectResult = Array.from(results[outputName].data);
+
+        detectResList.push({
+            method,
+            result: logitsToProbabilities(detectResult)
+        });
+
+        
+    }
+    console.log(detectResList)
+    return detectResList
 });
 
 app.whenReady().then(async () => {
